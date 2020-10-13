@@ -7,43 +7,55 @@ from discord.utils import get
 DISCORD_TOKEN = os.getenv('DISCORD_TOKEN')
 client = discord.Client()
 
-letters = {
-    ":regional_indicator_a:": "🇦",
-    ":regional_indicator_b:": "🇧",
-    ":regional_indicator_c:": "🇨",
-    ":regional_indicator_d:": "🇩",
-    ":regional_indicator_e:": "🇪",
-    ":regional_indicator_f:": "🇫",
-    ":regional_indicator_g:": "🇬",
-    ":regional_indicator_h:": "🇭",
-    ":regional_indicator_i:": "🇮",
-    ":regional_indicator_j:": "🇯",
-    ":regional_indicator_k:": "🇰",
-    ":regional_indicator_l:": "🇱",
-    ":regional_indicator_m:": "🇲",
-    ":regional_indicator_n:": "🇳",
-    ":regional_indicator_o:": "🇴",
-    ":regional_indicator_p:": "🇵",
-    ":regional_indicator_q:": "🇶",
-    ":regional_indicator_r:": "🇷",
-    ":regional_indicator_s:": "🇸",
-    ":regional_indicator_t:": "🇹",
-    ":regional_indicator_u:": "🇺",
-    ":regional_indicator_v:": "🇻",
-    ":regional_indicator_w:": "🇼",
-    ":regional_indicator_x:": "🇽",
-    ":regional_indicator_y:": "🇾",
-    ":regional_indicator_z:": "🇿",
-    ":regional_indicator_0:": "0⃣",
-    ":regional_indicator_1:": "1⃣",
-    ":regional_indicator_2:": "2⃣",
-    ":regional_indicator_3:": "3⃣",
-    ":regional_indicator_4:": "4⃣",
-    ":regional_indicator_5:": "5⃣",
-    ":regional_indicator_6:": "6⃣",
-    ":regional_indicator_7:": "7⃣",
-    ":regional_indicator_8:": "8⃣",
-    ":regional_indicator_9:": "9⃣",
+chars = {
+    "a": "🇦",
+    "b": "🇧",
+    "c": "🇨",
+    "d": "🇩",
+    "e": "🇪",
+    "f": "🇫",
+    "g": "🇬",
+    "h": "🇭",
+    "i": "🇮",
+    "j": "🇯",
+    "k": "🇰",
+    "l": "🇱",
+    "m": "🇲",
+    "n": "🇳",
+    "o": "🇴",
+    "p": "🇵",
+    "q": "🇶",
+    "r": "🇷",
+    "s": "🇸",
+    "t": "🇹",
+    "u": "🇺",
+    "v": "🇻",
+    "w": "🇼",
+    "x": "🇽",
+    "y": "🇾",
+    "z": "🇿",
+    "0": "0⃣",
+    "1": "1⃣",
+    "2": "2⃣",
+    "3": "3⃣",
+    "4": "4⃣",
+    "5": "5⃣",
+    "6": "6⃣",
+    "7": "7⃣",
+    "8": "8⃣",
+    "9": "9⃣",
+}
+
+chars_secondary = {
+    "b": "8⃣",
+    "e": "3⃣",
+    "g": "9⃣",
+    "h": "4⃣",
+    "i": "1⃣",
+    "o": "0⃣",
+    "s": "5⃣",
+    "t": "7⃣",
+    "z": "2⃣",
 }
 
 @client.event
@@ -66,37 +78,26 @@ async def on_message(message):
         for emoji in client.emojis:
             await react_message.add_reaction(emoji)
 
-    if message.content.startswith("!closs"):
+    if message.content.startswith("!r "):
 
-        react_text = "clos5"
+        text = message.content.split()
 
-        channel = message.channel
+        if len(text) > 1:
+            react_text = text[1].lower()
 
-        react_message = None
-        past_messages = await channel.history(limit=2).flatten()
-        for m in past_messages:
-            react_message = m
+            channel = message.channel
 
-        for char in react_text:
-            emoji = ":regional_indicator_" + char + ":"
-            await react_message.add_reaction(letters[emoji])
+            react_message = None
+            past_messages = await channel.history(limit=2).flatten()
+            for m in past_messages:
+                react_message = m
 
-    if message.content.startswith("!wipergang"):
-
-        for role in message.author.roles:
-            if role.name == "Wiper Gang":
-                react_text = "wipergan9"
-
-                channel = message.channel
-
-                react_message = None
-                past_messages = await channel.history(limit=2).flatten()
-                for m in past_messages:
-                    react_message = m
-
-                for char in react_text:
-                    emoji = ":regional_indicator_" + char + ":"
-                    await react_message.add_reaction(letters[emoji])
-                break
+            for i in range(len(react_text)):
+                past_chars = react_text[0:i]
+                if react_text[i] in chars:
+                    if react_text[i] not in past_chars:
+                        await react_message.add_reaction(chars[react_text[i]])
+                    elif react_text[i] in chars_secondary:
+                        await react_message.add_reaction(chars_secondary[react_text[i]])
 
 client.run(DISCORD_TOKEN)
