@@ -1,0 +1,13 @@
+[Unit]
+Description=Discord Reaction Bot
+After=multi-user.target
+
+[Service]
+Environment=DISCORD_TOKEN=
+Type=idle
+User=maraz
+WorkingDirectory=/home/maraz/bots/DiscordReactionBot
+ExecStart=python3 react.py
+
+[Install]
+WantedBy=multi-user.target
